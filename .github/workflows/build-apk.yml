@@ -36,7 +36,7 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
     
     - name: Add Capacitor
-      run: npx cap add android --web-dir=dist
+      run: npx cap add android
     
     - name: Sync Capacitor
       run: npx cap sync android
