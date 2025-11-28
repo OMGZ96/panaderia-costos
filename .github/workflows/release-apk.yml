@@ -48,32 +48,27 @@ jobs:
       working-directory: android
       run: |
         chmod +x gradlew
-        ./gradlew assembleRelease
+        ./gradlew assembleRelease assembleDebug
     
-    - name: Build AAB
-      working-directory: android
-      run: ./gradlew bundleRelease
-      continue-on-error: true
-    
-    - name: List generated files
+    - name: Find and List APK files
       run: |
-        echo "=== APK Files ==="
-        find android/app/build/outputs/apk -type f -name "*.apk" 2>/dev/null || echo "No APK found"
-        echo "=== AAB Files ==="
-        find android/app/build/outputs/bundle -type f -name "*.aab" 2>/dev/null || echo "No AAB found"
+        echo "=== Searching for APK files ==="
+        find android -type f -name "*.apk" -exec ls -lh {} \;
+        echo ""
+        echo "=== All output directories ==="
+        find android/app/build/outputs -type d
     
-    - name: Create Release with APK
+    - name: Upload APK to Release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          android/app/build/outputs/apk/release/app-release-unsigned.apk
+        files: android/app/build/outputs/apk/**/*.apk
         draft: false
         prerelease: false
         body: |
           # Panadería Costos Pro v${{ github.ref_name }}
           
-          ## 📱 APK Sin Firmar (Debug)
-          - **app-release-unsigned.apk** - Descarga e instala en tu dispositivo Android
+          ## 📱 APK
+          Descarga e instala en tu dispositivo Android
           
           ### Instalación:
           1. Descarga el APK
@@ -93,7 +88,7 @@ jobs:
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: app-release-apk
-        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+        name: apk-files
+        path: android/app/build/outputs/apk/
         retention-days: 30
       continue-on-error: true
