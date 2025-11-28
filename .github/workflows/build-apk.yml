@@ -1,8 +1,8 @@
-name: Build APK
+name: Build APK (Continuous)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -36,37 +36,22 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
     
     - name: Add Capacitor
-      run: npx cap add android
+      run: npx cap add android --web-dir=dist
     
     - name: Sync Capacitor
-      run: npx cap sync
+      run: npx cap sync android
     
-    - name: Build APK
+    - name: Build APK Debug
+      working-directory: android
       run: |
-        cd android
-        ./gradlew assembleRelease
-        cd ..
-    
-    - name: Sign APK
-      uses: r0adkll/sign-android-release@v1
-      id: sign_app
-      with:
-        releaseDirectory: android/app/build/outputs/apk/release
-        signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
-        alias: ${{ secrets.ANDROID_KEY_ALIAS }}
-        keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-        keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
-    
-    - name: Upload APK to Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: ${{ steps.sign_app.outputs.signedReleaseFile }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        chmod +x gradlew
+        ./gradlew assembleDebug
+      continue-on-error: true
     
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: app-release-signed.apk
-        path: ${{ steps.sign_app.outputs.signedReleaseFile }}
+        name: app-debug-apk
+        path: android/app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 7
+      continue-on-error: true

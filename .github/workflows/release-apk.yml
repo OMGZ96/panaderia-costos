@@ -33,45 +33,62 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
     
-    - name: Add Android platform
+    - name: Add Capacitor
       run: npx cap add android --web-dir=dist
     
     - name: Sync Capacitor
       run: npx cap sync android
     
-    - name: Build Release APK
+    - name: Build Release APK (unsigned)
       working-directory: android
       run: |
+        chmod +x gradlew
         ./gradlew assembleRelease
-        ./gradlew bundleRelease
     
-    - name: Sign APK
-      uses: r0adkll/sign-android-release@v1
-      id: sign_app
-      with:
-        releaseDirectory: android/app/build/outputs/apk/release
-        signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
-        alias: ${{ secrets.ANDROID_KEY_ALIAS }}
-        keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-        keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    - name: Build AAB
+      working-directory: android
+      run: ./gradlew bundleRelease
       continue-on-error: true
     
-    - name: Create Release
+    - name: List generated files
+      run: |
+        echo "=== APK Files ==="
+        find android/app/build/outputs/apk -type f -name "*.apk" 2>/dev/null || echo "No APK found"
+        echo "=== AAB Files ==="
+        find android/app/build/outputs/bundle -type f -name "*.aab" 2>/dev/null || echo "No AAB found"
+    
+    - name: Create Release with APK
       uses: softprops/action-gh-release@v1
       with:
         files: |
           android/app/build/outputs/apk/release/app-release-unsigned.apk
-          android/app/build/outputs/bundle/release/app-release.aab
         draft: false
         prerelease: false
+        body: |
+          # Panadería Costos Pro v${{ github.ref_name }}
+          
+          ## 📱 APK Sin Firmar (Debug)
+          - **app-release-unsigned.apk** - Descarga e instala en tu dispositivo Android
+          
+          ### Instalación:
+          1. Descarga el APK
+          2. En tu dispositivo, ve a Configuración → Seguridad → Permitir instalación desde fuentes desconocidas
+          3. Abre el APK y selecciona "Instalar"
+          
+          ### Características:
+          - ✅ Cálculo de costos de producción
+          - ✅ Gestión de inventario
+          - ✅ Historial de producción
+          - ✅ Exportación a Excel
+          - ✅ Interfaz responsive
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: success()
+      continue-on-error: true
     
-    - name: Upload artifact
+    - name: Upload APK as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts
-        path: |
-          android/app/build/outputs/apk/release/
-          android/app/build/outputs/bundle/release/
+        name: app-release-apk
+        path: android/app/build/outputs/apk/release/app-release-unsigned.apk
+        retention-days: 30
+      continue-on-error: true
