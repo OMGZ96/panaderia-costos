@@ -1,0 +1,31 @@
+{
+  "name": "panaderia-costos-pro",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "cap:init": "npx cap init \"Panaderia Costos Pro\" com.example.panaderiacostos --web-dir=dist",
+    "cap:add:android": "npm run build && npx cap add android",
+    "cap:sync": "npx cap sync",
+    "cap:open:android": "npx cap open android",
+    "android:assemble:release": "npm run build && npx cap sync android && cd android && .\\gradlew assembleRelease"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "@capacitor/core": "^7.4.4",
+    "xlsx": "latest",
+    "@google/genai": "^1.30.0",
+    "react-markdown": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "@capacitor/cli": "^7.4.4",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}
