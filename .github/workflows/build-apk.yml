@@ -23,7 +23,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: 'gradle'
+    
+    - name: Clear Gradle cache
+      run: |
+        rm -rf ~/.gradle/caches
+        rm -rf ~/.gradle/wrapper
     
     - name: Set up Node.js
       uses: actions/setup-node@v4
@@ -47,6 +51,13 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
     
+    - name: Update version code
+      run: |
+        TIMESTAMP=$(date +%s)
+        VERSION_CODE=$((TIMESTAMP / 1000))
+        echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+        echo "Updated version code to: $VERSION_CODE"
+    
     - name: Sync Capacitor with Android
       run: |
         if [ -d "android" ]; then
@@ -57,11 +68,17 @@ jobs:
           npx capacitor add android
         fi
     
+    - name: Update Android build.gradle with new version
+      run: |
+        cd android/app
+        sed -i "s/versionCode [0-9]*/versionCode ${{ env.VERSION_CODE }}/g" build.gradle
+        cat build.gradle | grep versionCode
+    
     - name: Build APK (Debug)
       working-directory: android
       run: |
         chmod +x gradlew
-        ./gradlew clean assembleDebug --no-daemon
+        ./gradlew clean assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx2048m"
       continue-on-error: false
     
     - name: List generated APK files
