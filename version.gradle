@@ -1,0 +1,33 @@
+// Script para actualizar automáticamente la versión del APK
+// Este archivo se ejecutará antes de compilar
+
+// Leer la versión desde package.json
+def getNpmVersion() {
+    def packageJson = new File(projectDir.parent.parent, "package.json").text
+    def versionMatch = packageJson.find(/"version":\s*"([^"]+)"/)
+    if (versionMatch) {
+        def version = versionMatch[0].replaceAll(/[^0-9.]/, '')
+        def parts = version.split('\\.')
+        // Convertir versión semántica a versionCode
+        // Ej: 1.0.4 -> 100040
+        return parts.collect { it.padLeft(2, '0') }.join('').toInteger()
+    }
+    return 1
+}
+
+def getVersionName() {
+    def packageJson = new File(projectDir.parent.parent, "package.json").text
+    def versionMatch = packageJson.find(/"version":\s*"([^"]+)"/)
+    if (versionMatch) {
+        return versionMatch[0].replaceAll(/[^0-9.]/, '')
+    }
+    return "1.0.0"
+}
+
+ext {
+    apkVersionCode = getNpmVersion()
+    apkVersionName = getVersionName()
+}
+
+println("APK Version Code: ${apkVersionCode}")
+println("APK Version Name: ${apkVersionName}")

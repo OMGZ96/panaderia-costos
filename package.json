@@ -1,22 +1,24 @@
 {
-  "name": "panadería-costos-pro",
+  "name": "panaderia-costos-pro",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cap:add:android": "cap add android",
+    "cap:build:android": "cap build android --release",
+    "cap:sync": "cap sync"
   },
   "dependencies": {
-    "@capacitor/android": "^6.2.1",
-    "@capacitor/cli": "^6.2.1",
-    "@capacitor/core": "^6.2.1",
-    "@google/genai": "^1.30.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "xlsx": "latest",
     "react-markdown": "^10.1.0",
-    "xlsx": "latest"
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/cli": "^6.1.0",
+    "@capacitor/android": "^6.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
@@ -25,3 +27,4 @@
     "vite": "^6.2.0"
   }
 }
+

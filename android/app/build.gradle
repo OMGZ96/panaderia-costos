@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.panaderia.costos"
+    namespace "com.example.panaderiacostos"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.panaderia.costos"
+        applicationId "com.example.panaderiacostos"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
