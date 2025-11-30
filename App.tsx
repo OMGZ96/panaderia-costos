@@ -143,6 +143,9 @@ export default function App() {
   // Confirmation State
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
+  // Export Menu State
+  const [showExportMenu, setShowExportMenu] = useState(false);
+
   // Auto-save effect for ingredients
   useEffect(() => {
     storageService.saveIngredients(ingredients);
@@ -268,26 +271,25 @@ export default function App() {
     setHistory([]);
   };
 
-  const handleExportInventory = () => {
-    const dataToExport = ingredients.map(ing => ({
-      'Ingrediente': ing.name,
-      'Stock Actual': ing.stock,
-      'Unidad': ing.unit,
-      'Precio por Unidad': ing.pricePerUnit,
-      'Valor Total Stock': ing.stock * ing.pricePerUnit
-    }));
-
-    if (dataToExport.length === 0) {
-      alert("No hay ingredientes en el inventario.");
-      return;
+  const handleExportInventory = async () => {
+    const result = await exportService.exportInventory(ingredients);
+    if (!result.success) {
+      alert(result.message);
     }
+  };
 
-    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Inventario Actual");
-    
-    const fileName = `Inventario_Panaderia_${new Date().toISOString().split('T')[0]}.xlsx`;
-    XLSX.writeFile(workbook, fileName);
+  const handleExportHistory = async () => {
+    const result = await exportService.exportHistory(history);
+    if (!result.success) {
+      alert(result.message);
+    }
+  };
+
+  const handleExportCompleteReport = async () => {
+    const result = await exportService.exportCompleteReport(ingredients, history);
+    if (!result.success) {
+      alert(result.message);
+    }
   };
 
   return (
@@ -366,13 +368,46 @@ export default function App() {
               </h2>
               <div className="flex gap-2 w-full sm:w-auto justify-end">
                 {activeTab === 'inventory' && (
-                  <button 
-                    onClick={handleExportInventory}
-                    className="flex items-center gap-1 text-xs font-medium bg-green-50 border border-green-200 hover:bg-green-100 text-green-700 px-3 py-1.5 rounded-md transition-colors shadow-sm"
-                    title="Descargar lista de inventario en Excel"
-                  >
-                    <DownloadIcon /> Exportar
-                  </button>
+                  <div className="relative">
+                    <button 
+                      onClick={() => setShowExportMenu(!showExportMenu)}
+                      className="flex items-center gap-1 text-xs font-medium bg-green-50 border border-green-200 hover:bg-green-100 text-green-700 px-3 py-1.5 rounded-md transition-colors shadow-sm"
+                      title="Opciones de exportación"
+                    >
+                      <DownloadIcon /> Exportar
+                    </button>
+                    {showExportMenu && (
+                      <div className="absolute right-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[180px]">
+                        <button
+                          onClick={() => {
+                            handleExportInventory();
+                            setShowExportMenu(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-100 transition-colors"
+                        >
+                          📦 Inventario
+                        </button>
+                        <button
+                          onClick={() => {
+                            handleExportHistory();
+                            setShowExportMenu(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-100 transition-colors"
+                        >
+                          📊 Historial
+                        </button>
+                        <button
+                          onClick={() => {
+                            handleExportCompleteReport();
+                            setShowExportMenu(false);
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                        >
+                          📄 Reporte Completo
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
                 <button 
                   onClick={addIngredient}
