@@ -5,6 +5,7 @@ import { INITIAL_INGREDIENTS, DEFAULT_YIELD, DEFAULT_LABOR, DEFAULT_FIXED } from
 import { SummaryCard } from './components/SummaryCard';
 import { HistoryModal } from './components/HistoryModal';
 import { ConfirmationModal } from './components/ConfirmationModal';
+import { storageService } from './services/storageService';
 import * as XLSX from 'xlsx';
 
 // Icons
@@ -91,28 +92,76 @@ const ChartBarIcon = () => (
 
 
 export default function App() {
-  const [ingredients, setIngredients] = useState<Ingredient[]>(INITIAL_INGREDIENTS);
-  const [yieldUnits, setYieldUnits] = useState<number>(DEFAULT_YIELD);
-  const [laborCost, setLaborCost] = useState<number>(DEFAULT_LABOR);
-  const [fixedCosts, setFixedCosts] = useState<number>(DEFAULT_FIXED);
-  const [salePrice, setSalePrice] = useState<number>(0);
+  const [ingredients, setIngredients] = useState<Ingredient[]>(() => 
+    storageService.loadIngredients(INITIAL_INGREDIENTS)
+  );
+  const [yieldUnits, setYieldUnits] = useState<number>(() => {
+    const config = storageService.loadConfig({
+      yieldUnits: DEFAULT_YIELD,
+      laborCost: DEFAULT_LABOR,
+      fixedCosts: DEFAULT_FIXED,
+      salePrice: 0
+    });
+    return config.yieldUnits;
+  });
+  const [laborCost, setLaborCost] = useState<number>(() => {
+    const config = storageService.loadConfig({
+      yieldUnits: DEFAULT_YIELD,
+      laborCost: DEFAULT_LABOR,
+      fixedCosts: DEFAULT_FIXED,
+      salePrice: 0
+    });
+    return config.laborCost;
+  });
+  const [fixedCosts, setFixedCosts] = useState<number>(() => {
+    const config = storageService.loadConfig({
+      yieldUnits: DEFAULT_YIELD,
+      laborCost: DEFAULT_LABOR,
+      fixedCosts: DEFAULT_FIXED,
+      salePrice: 0
+    });
+    return config.fixedCosts;
+  });
+  const [salePrice, setSalePrice] = useState<number>(() => {
+    const config = storageService.loadConfig({
+      yieldUnits: DEFAULT_YIELD,
+      laborCost: DEFAULT_LABOR,
+      fixedCosts: DEFAULT_FIXED,
+      salePrice: 0
+    });
+    return config.salePrice;
+  });
   const [activeTab, setActiveTab] = useState<'recipe' | 'inventory'>('recipe');
   const [activeRightTab, setActiveRightTab] = useState<'config' | 'results'>('config');
   
   // History State
-  const [history, setHistory] = useState<ProductionLog[]>(() => {
-    try {
-      const saved = localStorage.getItem('productionHistory');
-      return saved ? JSON.parse(saved) : [];
-    } catch (e) {
-      console.error("Failed to load history", e);
-      return [];
-    }
-  });
+  const [history, setHistory] = useState<ProductionLog[]>(() => 
+    storageService.loadProductionHistory()
+  );
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   // Confirmation State
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
+  // Auto-save effect for ingredients
+  useEffect(() => {
+    storageService.saveIngredients(ingredients);
+  }, [ingredients]);
+
+  // Auto-save effect for configuration
+  useEffect(() => {
+    storageService.saveConfig({
+      yieldUnits,
+      laborCost,
+      fixedCosts,
+      salePrice
+    });
+  }, [yieldUnits, laborCost, fixedCosts, salePrice]);
+
+  // Auto-save effect for history
+  useEffect(() => {
+    storageService.saveProductionHistory(history);
+  }, [history]);
 
   // Calculations
   const analysis = useMemo<CostAnalysis>(() => {
@@ -210,7 +259,6 @@ export default function App() {
     
     const newHistory = [newLog, ...history];
     setHistory(newHistory);
-    localStorage.setItem('productionHistory', JSON.stringify(newHistory));
     
     // 3. Close Modal
     setIsConfirmOpen(false);
@@ -218,7 +266,6 @@ export default function App() {
 
   const handleClearHistory = () => {
     setHistory([]);
-    localStorage.removeItem('productionHistory');
   };
 
   const handleExportInventory = () => {
