@@ -31,10 +31,13 @@ jobs:
         node-version: '20'
         cache: 'npm'
     
+    - name: Clear npm cache
+      run: npm cache clean --force
+    
     - name: Install dependencies
-      run: npm install --legacy-peer-deps --prefer-offline --no-audit
-      env:
-        npm_config_optional: false
+      run: |
+        rm -f package-lock.json
+        npm install --legacy-peer-deps
     
     - name: Build web application
       run: npm run build
