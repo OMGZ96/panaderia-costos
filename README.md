@@ -1,141 +1,99 @@
-# Panadería Costos Pro
+# 🍞 Panadería Costos Pro
 
-Aplicación web y móvil para gestionar costos y análisis de ventas en panaderías, potenciada con IA mediante Gemini API.
+## Descripción
+Aplicación web/móvil para gestionar costos de producción en panaderías, con inteligencia artificial integrada.
 
-## Características
+## 🚀 Características
+- Análisis de costos de producción
+- Integración con Google Gemini AI
+- Exportación a Excel
+- Historial de análisis
+- Interfaz responsiva
 
-- 📊 Análisis de costos y ventas con gráficos interactivos
-- 🤖 Análisis inteligente con IA (Gemini)
-- 💾 Exportación a Excel
-- 📱 Compatible con web y Android (APK)
-- 🔄 Interfaz reactiva con React
+## 📱 Plataformas Soportadas
+- Web (navegador)
+- Android (APK)
 
-## Requisitos Previos
-
+## 🛠️ Requisitos
 - Node.js 18+
-- Para generar APK: Java 17, Android SDK
+- JDK 17 (para Android)
+- Android SDK (para compilar APK)
 
-## Instalación Local
+## 📦 Instalación Local
 
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/OMGZ96/panaderia-costos.git
-   cd panaderia-costos
-   ```
-
-2. Instalar dependencias:
-   ```bash
-   npm install
-   ```
-
-3. Crear archivo `.env.local` (basado en `.env.local.example`):
-   ```bash
-   cp .env.local.example .env.local
-   ```
-
-4. Agregar tu clave de API de Gemini en `.env.local`:
-   ```
-   VITE_GEMINI_API_KEY=tu_clave_gemini_aqui
-   ```
-   
-   Obtén tu clave en: https://ai.google.dev/
-
-5. Ejecutar en modo desarrollo:
-   ```bash
-   npm run dev
-   ```
-
-   La app estará disponible en `http://localhost:3000`
-
-## Generar APK
-
-### Prerequisitos para Android
-- Java Development Kit (JDK) 17+
-- Android SDK 34+
-- Gradle 8.x
-
-### Build local del APK
-
-1. Compilar la aplicación web:
-   ```bash
-   npm run build
-   ```
-
-2. Agregar plataforma Android (primera vez):
-   ```bash
-   npm run cap:add
-   ```
-
-3. Sincronizar cambios:
-   ```bash
-   npm run cap:sync
-   ```
-
-4. Abrir Android Studio:
-   ```bash
-   npm run cap:open
-   ```
-
-5. Compilar en Android Studio:
-   - En Android Studio, ve a `Build` → `Build Bundle(s) / APK(s)` → `Build APK(s)`
-   - Espera a que se complete la compilación
-   - El APK estará en `android/app/build/outputs/apk/release/`
-
-### Compilación automática con GitHub Actions
-
-El APK se compila automáticamente en cada push. Para acceder a los APK:
-
-1. Ve a la pestaña "Actions" en el repositorio
-2. Selecciona el workflow "Build Android APK"
-3. Descarga el artifact `panaderia-costos-pro-apk`
-
-## Configuración de Firma para Release
-
-Para releases automáticos, configura estos secrets en GitHub:
-- `GEMINI_API_KEY`: Tu clave de API de Gemini
-- `SIGNING_KEY`: Clave privada en base64
-- `KEY_ALIAS`: Alias de la clave
-- `KEY_STORE_PASSWORD`: Contraseña del keystore
-- `KEY_PASSWORD`: Contraseña de la clave
-
-## Scripts disponibles
-
+### Ejecutar en desarrollo
 ```bash
-npm run dev              # Desarrollo local
-npm run build            # Build producción (web)
-npm run preview          # Preview del build
-npm run cap             # Comando Capacitor
-npm run cap:add         # Agregar plataforma Android
-npm run cap:sync        # Sincronizar con Android
-npm run cap:open        # Abrir Android Studio
-npm run cap:build       # Build release de Capacitor
-npm run cap:run         # Ejecutar con livereload
-npm run android:build   # Build completo (web + Android)
+npm install
+npm run dev
 ```
 
-## Desarrollo
+### Compilar APK localmente
 
-Este proyecto usa:
-- **React 19** - UI Framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool rápido
-- **Capacitor** - Framework para apps móviles
-- **Gemini API** - IA para análisis
+**En Windows:**
+```bash
+setup-android.bat
+```
 
-## Contribuir
+**En macOS/Linux:**
+```bash
+bash setup-android.sh
+```
+
+## 🤖 Construcción Automática en GitHub
+
+Este proyecto incluye GitHub Actions para compilar y firmar el APK automáticamente.
+
+### Configuración requerida:
+
+1. **Generar certificado de firma** - Ver [APK_BUILD_GUIDE.md](APK_BUILD_GUIDE.md)
+2. **Configurar secretos en GitHub** - Ver [APK_BUILD_GUIDE.md](APK_BUILD_GUIDE.md)
+3. **Crear un tag de release**:
+   ```bash
+   git tag -a v1.0.0 -m "Release version 1.0.0"
+   git push origin v1.0.0
+   ```
+
+El APK se compilará automáticamente y estará disponible en los Releases de GitHub.
+
+## 📁 Estructura del Proyecto
+
+```
+├── src/
+│   ├── components/        # Componentes React
+│   ├── services/         # Servicios (Gemini API)
+│   ├── App.tsx          # Componente principal
+│   └── index.tsx        # Punto de entrada
+├── .github/workflows/   # GitHub Actions
+├── capacitor.config.json # Configuración de Capacitor
+├── vite.config.ts       # Configuración de Vite
+└── package.json
+```
+
+## 🔒 Seguridad
+
+- Las claves API se almacenan como secretos de GitHub
+- El keystore de firma NUNCA debe ser commiteado
+- Use variables de entorno para datos sensibles
+
+## 📚 Documentación Adicional
+
+- [APK Build Guide](./APK_BUILD_GUIDE.md) - Guía detallada para compilar APK
+- [Capacitor Documentation](https://capacitorjs.com/)
+- [Google Gemini API](https://ai.google.dev/)
+
+## 🤝 Contribuir
 
 Las contribuciones son bienvenidas. Por favor:
-
 1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
+2. Crea una rama para tu feature
+3. Commit tus cambios
+4. Push a la rama
 5. Abre un Pull Request
 
-## Licencia
+## 📄 Licencia
 
-Este proyecto está bajo licencia MIT.
+Este proyecto está bajo la Licencia MIT.
 
-## Soporte
+## 📞 Soporte
 
-Para reportar bugs o sugerencias, abre un issue en el repositorio.
+Para reportar problemas o sugerencias, abre un Issue en GitHub.

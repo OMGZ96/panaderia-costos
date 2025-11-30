@@ -1,33 +1,30 @@
 {
   "name": "panaderia-costos-pro",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "cap": "capacitor",
-    "cap:add": "capacitor add android",
-    "cap:sync": "capacitor sync android",
-    "cap:open": "capacitor open android",
-    "cap:build": "capacitor build android --release",
-    "cap:run": "capacitor run android --livereload",
-    "android:build": "npm run build && npm run cap:sync && npm run cap:build"
+    "cap:add:android": "cap add android",
+    "cap:build:android": "cap build android --release",
+    "cap:sync": "cap sync"
   },
   "dependencies": {
-    "@capacitor/android": "^6.1.0",
-    "@capacitor/app": "^6.0.1",
-    "@capacitor/core": "^6.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "xlsx": "latest"
+    "xlsx": "latest",
+    "react-markdown": "^10.1.0",
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/cli": "^6.1.0",
+    "@capacitor/android": "^6.1.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "^6.1.0",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }
 }
+

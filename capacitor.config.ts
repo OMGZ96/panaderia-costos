@@ -1,17 +1,10 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.panaderia.costos',
+  appId: 'com.example.panaderiacostos',
   appName: 'Panadería Costos Pro',
   webDir: 'dist',
-  server: {
-    androidScheme: 'https'
-  },
-  plugins: {
-    SplashScreen: {
-      launchShowDuration: 0,
-    },
-  },
+  bundledWebRuntime: false,
 };
 
 export default config;
