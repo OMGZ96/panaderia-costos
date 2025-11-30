@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Panadería Costos Pro</string>
+    <string name="title_activity_main">Panadería Costos Pro</string>
+    <string name="package_name">com.panaderia.costos</string>
+    <string name="custom_url_scheme">com.panaderia.costos</string>
+</resources>
