@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Android
+# android/
+.gradle/
+local.properties
+*.keystore
+*.jks
+keystore-base64.txt

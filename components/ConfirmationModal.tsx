@@ -69,10 +69,10 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                   ))}
                 </ul>
               </div>
-              
+
               <div className="flex items-start gap-2 pt-2 border-t border-red-100">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   id="acknowledge-stock"
                   checked={acknowledged}
                   onChange={(e) => setAcknowledged(e.target.checked)}
@@ -95,11 +95,10 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             <button
               onClick={onConfirm}
               disabled={hasMissing && !acknowledged}
-              className={`flex-1 px-4 py-2 rounded-lg text-white font-medium shadow-md transition-all flex justify-center items-center gap-2 text-sm ${
-                hasMissing 
-                  ? (acknowledged ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-300 cursor-not-allowed') 
+              className={`flex-1 px-4 py-2 rounded-lg text-white font-medium shadow-md transition-all flex justify-center items-center gap-2 text-sm ${hasMissing
+                  ? (acknowledged ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-300 cursor-not-allowed')
                   : 'bg-blue-600 hover:bg-blue-700'
-              }`}
+                }`}
             >
               {hasMissing ? 'Confirmar (Forzar)' : 'Confirmar y Descontar'}
             </button>

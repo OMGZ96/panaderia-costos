@@ -16,6 +16,13 @@ export interface Buyer {
   pricePerUnit: number;
 }
 
+export interface ProductionData {
+  ingredients: Ingredient[];
+  yieldUnits: number; // How many loaves of bread produced
+  laborCost: number; // Cost of labor
+  fixedCosts: number; // Electricity, gas, rent portion
+}
+
 export interface CostAnalysis {
   totalMaterials: number;
   totalProduction: number;
@@ -33,9 +40,9 @@ export interface ProductionLog {
   fixedCosts?: number; // Snapshot of fixed costs
   salePrice?: number; // Snapshot of sale price per unit used for calculation
   totalProfit?: number; // In sales, this represents Total Revenue
-  ingredientsUsed: { 
-    name: string; 
-    quantity: number; 
+  ingredientsUsed: {
+    name: string;
+    quantity: number;
     unit: string;
     cost?: number; // Snapshot of ingredient cost (quantity * price)
   }[];
