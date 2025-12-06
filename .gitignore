@@ -31,3 +31,8 @@ local.properties
 *.jks
 keystore-base64.txt
 keystore.properties
+
+# Electron
+dist_electron
+release
+installers
