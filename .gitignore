@@ -30,3 +30,4 @@ local.properties
 *.keystore
 *.jks
 keystore-base64.txt
+keystore.properties
